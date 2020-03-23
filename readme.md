@@ -1,5 +1,35 @@
 # HeroSearch
 
+Laravel Scout elasticsearch driver base on our own needs.
+
+## What's hero-search
+
+Before Carro, it was car hero. Base on that, we named our elastic-scout package as hero search.
+Hero search is a scout package. We created this for our own needs. Currently, this was mostly inspred via [this course](https://codecourse.com/courses/create-a-laravel-scout-elasticsearch-driver). We will keep add the features base on our needs.
+
+## Usage example
+
+## Release History
+
+## Contributing
+
+ 1. [Fork it] (<https://github.com/carro-public/hero-search)>
+ 2. Create your feature branch (git checkout -b feature/fooBar)
+ 3. Commit your changes (git commit -am 'Add some fooBar')
+ 4. Push to the branch (git push origin feature/fooBar)
+
+## Security
+
+If you discover any security related issues, please email aung.koko@carro.co instead of using the issue tracker.
+
+## Credits
+
+- All Contributors
+
+## License
+
+The MIT License (MIT). Please see License File for more information.
+
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Build Status][ico-travis]][link-travis]
@@ -8,6 +38,7 @@
 This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
 
 ## Elastic Search Installation
+
 [Elsatic Search Installation](https://www.notion.so/carro/Elasticsearch-ce836e15f5ad40a5a67a6ff9a8f5b128)
 
 ## Installation
@@ -15,7 +46,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require carropublic/herosearch
+$ composer require carropublic/hero-search
 ```
 
 ## Usage
@@ -29,23 +60,6 @@ Please see the [changelog](changelog.md) for more information on what has change
 ``` bash
 $ composer test
 ```
-
-## Contributing
-
-Please see [contributing.md](contributing.md) for details and a todolist.
-
-## Security
-
-If you discover any security related issues, please email author email instead of using the issue tracker.
-
-## Credits
-
-- [author name][link-author]
-- [All Contributors][link-contributors]
-
-## License
-
-license. Please see the [license file](license.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/carropublic/herosearch.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/carropublic/herosearch.svg?style=flat-square
