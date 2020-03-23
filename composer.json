@@ -1,7 +1,7 @@
 {
     "name": "carropublic/herosearch",
-    "description": ":package_description",
-    "license": "license",
+    "description": "Laravel scout with elastic search driver",
+    "license": "MIT",
     "authors": [
         {
             "name": "Aung Ko Ko",
