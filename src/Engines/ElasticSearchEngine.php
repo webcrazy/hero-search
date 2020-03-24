@@ -182,8 +182,8 @@ class ElasticSearchEngine extends Engine
     {
         if (!method_exists($model, 'searchableFields')) {
             return [];
-        }
+	}
 
-        return $model->getSearchableFields();
+        return $model->searchableFields();
     }
 }
