@@ -15,14 +15,10 @@ Make sure you have installed [elasticsearch](https://www.elastic.co/guide/en/ela
 $ composer require carropublic/herosearch
 ```
 
-Register the provider directly in your app configuration file config/app.php config/app.php:
-
-```php
-'providers' => [
-	// ...
-
-	CarroPublic\HeroSearch\HeroSearchServiceProvider::class,
-]
+You should publish Scout and ElasticSearch configuration using:
+```
+$ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
+$ php artisan vendor:publish --provider="CarroPublic\HeroSearch\HeroSearchServiceProvider"
 ```
 
 ## Package Configuration
