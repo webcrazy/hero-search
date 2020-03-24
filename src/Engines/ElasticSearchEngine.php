@@ -153,7 +153,7 @@ class ElasticSearchEngine extends Engine
             'index' => $model->searchableAs()
         ]);
 
-        Artisan::call('scout:elasticsearch:create', [
+        Artisan::call('hero-search:elasticsearch:create', [
             'model' => get_class($model)
         ]);
     }

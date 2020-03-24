@@ -25,10 +25,6 @@ class HeroSearchServiceProvider extends ServiceProvider
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
-
-            $this->commands([
-                ElasticSearchIndex::class,
-            ]);
         }
 
         $this->app->singleton('elasticsearch', function() {
@@ -78,7 +74,9 @@ class HeroSearchServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        // Publishing the configuration file.
+        /**
+         * Publishing the configuration file
+         */
         $this->publishes([
             __DIR__.'/../config/herosearch.php' => config_path('herosearch.php'),
         ], 'herosearch.config');
@@ -98,7 +96,12 @@ class HeroSearchServiceProvider extends ServiceProvider
             __DIR__.'/../resources/lang' => resource_path('lang/vendor/carropublic'),
         ], 'herosearch.views');*/
 
-        // Registering package commands.
-        // $this->commands([]);
+        /**
+         * Registering the commands to import index
+         *
+         */
+        $this->commands([
+            ElasticSearchIndex::class,
+        ]);
     }
 }

@@ -9,7 +9,79 @@ Hero search is a scout package. We created this for our own needs. Currently, th
 
 ## Installation
 
+Make sure you have installed [elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-install.html)
+
+```
+$ composer install carropublic/herosearch
+```
+
+Register the provider directly in your app configuration file config/app.php config/app.php:
+
+```php
+'providers' => [
+	// ...
+
+	CarroPublic\HeroSearch\HeroSearchServiceProvider::class,
+]
+```
+
+## Package Configuration
+
+In your `.env` file, add host and port of your running elasticsearch.
+
+```
+ELASTICSEARCH_HOST=your_elasticsearch_host
+ELASTICSEARCH_PORT=your_elasticsearch_port
+```
+
+Update scout driver to `elasticsearch` as well.
+```
+SCOUT_DRIVER=elasticsearch
+```
+
 ## Usage example
+
+Use scout `Searchable` trait in your model
+
+```php
+<?php
+
+namespace App;
+
+use Laravel\Scout\Searchable;
+
+class User extends Model
+{
+    use Searchable;
+    ...
+}
+```
+
+Need to add index for your model that is needed to use scout searching
+```
+$ php artisan hero-search:elasticsearch:create path_to_your_model(Eg. App\\User)
+```
+
+
+Then import the records
+```
+$ php artisan scout:import path_to_your_model(Eg. App\\User)
+```
+
+You can also remove imported data by flush command:
+```
+$ php artisn scout:flush path_to_your_model(Eg. App\\User)
+```
+
+Then can search by using:
+```
+Model::search($query)
+```
+
+Eg:
+```
+User::search('foo');
+```
 
 ## Release History
 
@@ -22,7 +94,7 @@ Hero search is a scout package. We created this for our own needs. Currently, th
 
 ## Security
 
-If you discover any security related issues, please email aung.ko@carro.co instead of using the issue tracker.
+If you discover any security related issues, please email aung.koko@carro.co instead of using the issue tracker.
 
 ## Credits
 
