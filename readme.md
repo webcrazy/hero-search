@@ -73,6 +73,18 @@ You can also remove imported data by flush command:
 $ php artisn scout:flush path_to_your_model(Eg. App\\User)
 ```
 
+Add `searchableFields` methods in model to identify your query must be serached in which fields.
+Eg:
+```php
+public function searchableFields()
+{
+    return [
+        'name',
+        'email'
+    ];
+}
+```
+
 Then can search by using:
 ```
 Model::search($query)
