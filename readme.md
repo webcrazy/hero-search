@@ -12,7 +12,7 @@ Hero search is a scout package. We created this for our own needs. Currently, th
 Make sure you have installed [elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-install.html)
 
 ```
-$ composer install carropublic/herosearch
+$ composer require carropublic/herosearch
 ```
 
 Register the provider directly in your app configuration file config/app.php config/app.php:
