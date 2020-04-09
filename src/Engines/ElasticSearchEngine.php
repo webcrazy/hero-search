@@ -67,19 +67,58 @@ class ElasticSearchEngine extends Engine
     protected function performSearch(Builder $builder, array $options = [])
     {
         $params = array_merge_recursive($this->getRequestBody($builder->model),[
+            'scroll' => '30s',
             'body'  => [
                 'from' => 0,
                 'size' => 5000,
                 'query' => [
-                    'multi_match' => [
-                        'query'     => $builder->query ?? '',
-                        'fields'    => $this->getSearchableFields($builder->model),
-                        'type'      => 'phrase_prefix'
+                    'bool' => [
+                        'must' => [
+                            'multi_match' => [
+                                'query'     => $builder->query ?? '',
+                                'fields'    => $this->getSearchableFields($builder->model),
+                                'type'      => 'phrase_prefix',
+                            ]
+                        ]
                     ]
+                ],
+                'sort' => [
+                    'id' => ['order' => 'desc']
                 ]
             ]
         ], $options);
 
+        if (empty($builder->query)) {
+            $params = array_merge_recursive($this->getRequestBody($builder->model),[
+                'scroll' => '30s',
+                'body'  => [
+                    'from' => 0,
+                    'size' => 5000,
+                    'query' => [
+                        'bool' => [
+                            'must' => [
+                                'match_all' => new \stdClass(),
+                            ]
+                        ]
+                    ],
+                    'sort' => [
+                        'id' => ['order' => 'desc']
+                    ]
+                ]
+            ], $options);
+        }
+
+
+        if (count($builder->wheres) > 0) {
+            $data = [];
+            foreach ($builder->wheres as $key => $value) {
+                array_push($data,['term' => [$key => $value]]);
+            }
+            
+            $params['body']['query']['bool']['filter'] = $data;
+        }
+
+        info(json_encode($params['body']));
         return $this->client->search($params);
     }
 
@@ -107,7 +146,7 @@ class ElasticSearchEngine extends Engine
      */
     public function mapIds($results)
     {
-
+        return collect($results['hits'])->pluck('_id')->values();
     }
 
     /**
@@ -138,7 +177,7 @@ class ElasticSearchEngine extends Engine
      */
     public function getTotalCount($results)
     {
-        return count(Arr::get($results, 'hits.hits'));
+        return Arr::get($results, 'hits.total.value');
     }
 
     /**
