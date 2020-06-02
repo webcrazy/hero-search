@@ -8,7 +8,6 @@ use Illuminate\Support\Arr;
 use Laravel\Scout\Engines\Engine;
 use Illuminate\Support\Facades\Artisan;
 
-
 class ElasticSearchEngine extends Engine
 {
     protected $client;
@@ -88,7 +87,7 @@ class ElasticSearchEngine extends Engine
             ]
         ], $options);
 
-        if (empty($builder->query)) {
+        if (empty($builder->query) && empty($builder->wheres)) {
             $params = array_merge_recursive($this->getRequestBody($builder->model),[
                 'scroll' => '30s',
                 'body'  => [
@@ -108,14 +107,27 @@ class ElasticSearchEngine extends Engine
             ], $options);
         }
 
-
         if (count($builder->wheres) > 0) {
             $data = [];
             foreach ($builder->wheres as $key => $value) {
-                array_push($data,['term' => [$key => $value]]);
+                array_push($data,['match' => [$key => $value]]); // term
             }
-            
-            $params['body']['query']['bool']['filter'] = $data;
+
+            $params['body']['query']['bool']['must'] = $data; // filter
+        }
+
+        if (count($builder->orders) > 0) {
+            $params['body']['sort'] = collect($builder->orders)->map(function($value){
+                return [$value['column'] => ["order" => $value['direction']]];
+            })->toArray();
+        }
+
+        if ($builder->callback) {
+            return call_user_func(
+                $builder->callback,
+                $this->client,
+                $params
+            );
         }
 
         info(json_encode($params['body']));
@@ -163,10 +175,16 @@ class ElasticSearchEngine extends Engine
             return $model->newCollection();
         };
 
+        $objectIds = collect($hits)->pluck('_id')->values()->all();
+        $objectIdPositions = array_flip($objectIds);
+
         return $model->getScoutModelsByIds(
-            $builder,
-            collect($hits)->pluck('_id')->values()->all()
-        );
+            $builder, $objectIds
+        )->filter(function ($model) use ($objectIds) {
+            return in_array($model->getScoutKey(), $objectIds);
+        })->sortBy(function ($model) use ($objectIdPositions) {
+            return $objectIdPositions[$model->getScoutKey()];
+        })->values();
     }
 
     /**
@@ -214,14 +232,14 @@ class ElasticSearchEngine extends Engine
 
     /**
      * Getting searchable fields of a model
-     * 
+     *
      * @return array
      */
     protected function getSearchableFields($model)
     {
         if (!method_exists($model, 'searchableFields')) {
             return [];
-	}
+        }
 
         return $model->searchableFields();
     }
