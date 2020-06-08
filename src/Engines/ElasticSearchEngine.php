@@ -130,7 +130,6 @@ class ElasticSearchEngine extends Engine
             );
         }
 
-        info(json_encode($params['body']));
         return $this->client->search($params);
     }
 
