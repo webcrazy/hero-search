@@ -110,7 +110,9 @@ class ElasticSearchEngine extends Engine
         if (count($builder->wheres) > 0) {
             $data = [];
             foreach ($builder->wheres as $key => $value) {
-                array_push($data,['match' => [$key => $value]]); // term
+                if ($value) {
+                    array_push($data,['match' => [$key => $value]]); // term
+                }
             }
 
             $params['body']['query']['bool']['must'] = $data; // filter
